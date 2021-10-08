@@ -53,7 +53,11 @@ const fzLocal = {
             case tuyaLocal.dataPoints.zsHeatingSetpoint:
                 const ret = {};
                 if (value==0) ret.system_mode='off';
-                if (value==60) ret.system_mode='heat';
+                if (value==60) { 
+                    ret.system_mode='heat';
+                    ret.preset = 'boost';
+                }
+                
                 ret.current_heating_setpoint= (value / 2).toFixed(1);
                 if (value>0 && value<60) globalStore.putValue(msg.endpoint, 'current_heating_setpoint', ret.current_heating_setpoint);
                 return ret;
@@ -96,7 +100,7 @@ const fzLocal = {
             case tuyaLocal.dataPoints.zsMode:
                 switch (value) {
                 case 1: // manual
-                    return {system_mode: 'auto', away_mode: 'OFF', preset: 'manual'};
+                    return {system_mode: 'heat', away_mode: 'OFF', preset: 'manual'};
                 case 2: // away
                     return {system_mode: 'auto', away_mode: 'ON', preset: 'holiday'};
                 case 0: // auto
@@ -195,7 +199,17 @@ const tzLocal = {
         key: ['preset'],
         convertSet: async (entity, key, value, meta) => {
             const lookup = {'schedule': 0, 'manual': 1, 'holiday': 2};
-            await tuya.sendDataPointEnum(entity, tuyaLocal.dataPoints.zsMode, lookup[value]);
+            if (value == 'boost') {
+                await tuya.sendDataPointEnum(entity, tuyaLocal.dataPoints.zsMode, lookup['manual']);
+                await tuya.sendDataPointValue(entity, tuyaLocal.dataPoints.zsHeatingSetpoint, 60);
+            } else {
+                await tuya.sendDataPointEnum(entity, tuyaLocal.dataPoints.zsMode, lookup[value]);
+                if (value == 'manual') {
+                    const temp = globalStore.getValue(entity, 'current_heating_setpoint');
+                    await tuya.sendDataPointValue(entity, tuyaLocal.dataPoints.zsHeatingSetpoint, temp ? Math.round(temp * 2) : 43 );
+                }
+                
+            }
         },
     },
     zs_thermostat_system_mode: {
@@ -204,10 +218,9 @@ const tzLocal = {
             if (value == 'off') {
                 await tuya.sendDataPointEnum(entity, tuyaLocal.dataPoints.zsMode, 1);
                 await tuya.sendDataPointValue(entity, tuyaLocal.dataPoints.zsHeatingSetpoint, 0);
-            } else if (value == 'heat') {
-                await tuya.sendDataPointEnum(entity, tuyaLocal.dataPoints.zsMode, 1);
-                await tuya.sendDataPointValue(entity, tuyaLocal.dataPoints.zsHeatingSetpoint, 60);
             } else if (value == 'auto') {
+                await tuya.sendDataPointEnum(entity, tuyaLocal.dataPoints.zsMode, 0);
+            } else if (value == 'heat') {
                 // manual
                 const temp = globalStore.getValue(entity, 'current_heating_setpoint');
                 await tuya.sendDataPointEnum(entity, tuyaLocal.dataPoints.zsMode, 1);
@@ -278,7 +291,7 @@ const device = {
                         .withLocalTemperature()
                         .withLocalTemperatureCalibration()
                         .withSystemMode(['off', 'heat', 'auto'], ea.STATE_SET) //system mode only: off, heat, auto
-                        .withPreset(['schedule', 'manual', 'holiday']),
+                        .withPreset(['schedule', 'manual', 'holiday', 'boost']),
         e.comfort_temperature(), 
         e.eco_temperature(),
         exposes.numeric('detectwindow_temperature', ea.STATE_SET).withUnit('°C').withDescription('Open window detection temperature'),
