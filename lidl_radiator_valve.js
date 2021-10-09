@@ -33,6 +33,13 @@ const tuyaLocal = {
     zsAwaySetting: 103,
     zsBinaryOne: 106,
     zsBinaryTwo: 107,
+    zsScheduleMonday: 109,
+    zsScheduleTuesday: 110,
+    zsScheduleWednesday: 111,
+    zsScheduleThursday: 112,
+    zsScheduleFriday: 113,
+    zsScheduleSaturday: 114,
+    zsScheduleSunday: 115
 
 	},
 };
@@ -43,8 +50,6 @@ const fzLocal = {
         convert: (model, msg, publish, options, meta) => {
             const dp = msg.data.dp;
             const value = tuya.getDataValue(msg.data.datatype, msg.data.data);
-
-            // if (dp >= 101 && dp <=107) return; // handled by tuya_thermostat_weekly_schedule
 
             switch (dp) {
 
@@ -112,17 +117,27 @@ const fzLocal = {
                     break;
                 }
                 break;
-
-            //case tuya.dataPoints.runningState:
-            //    return {running_state: value ? 'heat' : 'idle'};
-            case 109:
-            case 110:
-            case 111:
-            case 112:
-            case 113:
-            case 114:
-            case 115:
-                break;
+            case tuyaLocal.dataPoints.zsScheduleMonday:
+            case tuyaLocal.dataPoints.zsScheduleTuesday:
+            case tuyaLocal.dataPoints.zsScheduleWednesday:
+            case tuyaLocal.dataPoints.zsScheduleThursday:
+            case tuyaLocal.dataPoints.zsScheduleFriday:
+            case tuyaLocal.dataPoints.zsScheduleSaturday:
+            case tuyaLocal.dataPoints.zsScheduleSunday:
+                // sorry for the stupide structure, but I don't know, how I can expose array structure
+                const daysMap = {1: 'monday', 2: 'tuesday', 3: 'wednesday', 4: 'thursday', 5: 'friday', 6: 'saturday', 7: 'sunday'};
+                const day = daysMap[value[0]];
+                const rets = {};
+                for (let i = 1; i <= 9; i++) {
+                    var tempId = ((i-1) * 2) +1;
+                    var timeId = ((i-1) * 2) +2;
+                    rets[`${day}_temp_${i}`] = (value[tempId] / 2).toFixed(1);
+                    if (i!=9) {
+                        rets[`${day}_hour_${i}`] = Math.floor(value[timeId] / 4).toString().padStart(2, '0');
+                        rets[`${day}_minute_${i}`] = ((value[timeId] % 4) *15).toString().padStart(2, '0');
+                    }
+                }
+                return rets;
             case tuyaLocal.dataPoints.zsAwaySetting:
                 const retap = {};
                 retap.away_preset_year = value[0];
@@ -134,8 +149,7 @@ const fzLocal = {
                 retap.away_preset_days = (value[6]<<8)+value[7];
                 return retap;
             default:
-                meta.logger.warn(`zigbee-herdsman-converters:zsThermostat: Unrecognized DP #${
-                    dp} with data ${JSON.stringify(msg.data)}`);
+                meta.logger.warn(`zigbee-herdsman-converters:zsThermostat: Unrecognized DP #${dp} with data ${JSON.stringify(msg.data)}`);
             }
         },
     },
@@ -262,9 +276,9 @@ const tzLocal = {
                             'away_preset_days']) {
                 var v = 0;
                 if (value.hasOwnProperty(attrName)) {
-                    v = value[attrName];
+                    var v = value[attrName];
                 } else if (meta.state.hasOwnProperty(attrName)) {
-                    v = meta.state[attrName];
+                    var v = meta.state[attrName];
                 }
                 switch (attrName) {
                     case 'away_preset_year':
@@ -307,6 +321,56 @@ const tzLocal = {
             await tuya.sendDataPointRaw(entity, tuyaLocal.dataPoints.zsAwaySetting, result);
         },
     },
+    zs_thermostat_local_schedule: {
+        key: ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'],
+        convertSet: async (entity, key, value, meta) => {
+            const daysMap = {'monday': 1, 'tuesday': 2, 'wednesday': 3,'thursday': 4,'friday': 5,'saturday': 6,'sunday': 7};
+            const day = daysMap[key];
+            const results = [];
+            results.push(day);
+            for (let i = 1; i <= 9; i++) {
+                // temperature
+                var attrName = `${key}_temp_${i}`;
+                var v = 17;
+                if (value.hasOwnProperty(attrName)) {
+                    var v = value[attrName];
+                } else if (meta.state.hasOwnProperty(attrName)) {
+                    var v = meta.state[attrName];
+                }
+                if (v<0.5 || v>29.5) v = 17;
+                results.push(Math.round(v * 2));
+                if (i!=9) {
+                    // hour
+                    var attrName = `${key}_hour_${i}`;
+                    var h = 0;
+                    if (value.hasOwnProperty(attrName)) {
+                        var h = value[attrName];
+                    } else if (meta.state.hasOwnProperty(attrName)) {
+                        var h = meta.state[attrName];
+                    }
+                    // minute
+                    var attrName = `${key}_minute_${i}`;
+                    var m = 0;
+                    if (value.hasOwnProperty(attrName)) {
+                        var m = value[attrName];
+                    } else if (meta.state.hasOwnProperty(attrName)) {
+                        var m = meta.state[attrName];
+                    }
+                    var rt = h*4 + m/15;
+                    if (rt<1) {
+                        var rt=1;
+                    } else if (rt>96) {
+                        var rt = 96;
+                    }
+                    results.push(Math.round(rt));
+                }
+
+            }
+            if (value > 0) value = value*10;
+            if (value < 0) value = value*10 + 0x100000000;
+            await tuya.sendDataPointRaw(entity, (meta.mapped.meta.scheduleFirstDayDpId+day-1), results);
+        },
+    },
 };       
 const device = {
     // Moes Tuya Alt Thermostat
@@ -336,18 +400,12 @@ const device = {
         tzLocal.zs_thermostat_binary_one,
         tzLocal.zs_thermostat_binary_two,
         tzLocal.zs_thermostat_away_setting,
-        //tz.tuya_thermostat_weekly_schedule,
+        tzLocal.zs_thermostat_local_schedule,
+
         tz.tuya_data_point_test
     ],
     onEvent: tuya.onEventSetLocalTime,
-    meta: {tuyaThermostatPreset: {0: 'schedule', 1: 'manual', 2: 'holiday'}, tuyaThermostatSystemMode: {0: 'off', 1: 'heat', 2: 'auto'},
-            thermostat: {
-                weeklyScheduleFirstDayDpId: 109,
-                weeklyScheduleMaxTransitions: 5,
-                weeklyScheduleSupportedModes: [1], // bits: 0-heat present, 1-cool present (dec: 1-heat,2-cool,3-heat+cool)
-            //    weeklyScheduleConversion: 'saswell',
-            },
-        },
+    meta: {scheduleFirstDayDpId: 109},
     configure: async (device, coordinatorEndpoint, logger) => {
         const endpoint = device.getEndpoint(1);
         await reporting.bind(endpoint, coordinatorEndpoint, ['genBasic']);
@@ -378,6 +436,552 @@ const device = {
                         .withFeature(exposes.numeric('away_preset_day', ea.ALL).withUnit('day').withDescription('Start away day'))
                         .withFeature(exposes.numeric('away_preset_hour', ea.ALL).withUnit('hour').withDescription('Start away hours'))
                         .withFeature(exposes.numeric('away_preset_minute', ea.ALL).withUnit('min').withDescription('Start away minutes')),
+        exposes.composite('monday', 'monday')
+                .withFeature(exposes.numeric('monday_temp_1', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 1'))
+                .withFeature(exposes.enum('monday_hour_1', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10','11', '12', '13', '14', '15', '16', '17', '18', '19', 
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 1'))
+                .withFeature(exposes.enum('monday_minute_1', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 1'))
+                .withFeature(exposes.numeric('monday_temp_2', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 2'))
+                .withFeature(exposes.enum('monday_hour_2', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', 
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 2'))
+                .withFeature(exposes.enum('monday_minute_2', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute21'))
+                .withFeature(exposes.numeric('monday_temp_3', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 3'))
+                .withFeature(exposes.enum('monday_hour_3', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 3'))
+                .withFeature(exposes.enum('monday_minute_3', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 3'))
+                .withFeature(exposes.numeric('monday_temp_4', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 4'))
+                .withFeature(exposes.enum('monday_hour_4', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 4'))
+                .withFeature(exposes.enum('monday_minute_4', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 4'))
+                .withFeature(exposes.numeric('monday_temp_5', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 5'))
+                .withFeature(exposes.enum('monday_hour_5', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 5'))
+                .withFeature(exposes.enum('monday_minute_5', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 5'))
+                .withFeature(exposes.numeric('monday_temp_6', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 6'))
+                .withFeature(exposes.enum('monday_hour_6', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 6'))
+                .withFeature(exposes.enum('monday_minute_6', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 6'))
+                .withFeature(exposes.numeric('monday_temp_7', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 7'))
+                .withFeature(exposes.enum('monday_hour_7', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 7'))
+                .withFeature(exposes.enum('monday_minute_7', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 7'))
+                .withFeature(exposes.numeric('monday_temp_8', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 8'))
+                .withFeature(exposes.enum('monday_hour_8', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 8'))
+                .withFeature(exposes.enum('monday_minute_8', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 8'))
+                .withFeature(exposes.numeric('monday_temp_9', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 9')),
+            exposes.composite('tuesday', 'tuesday')
+                .withFeature(exposes.numeric('tuesday_temp_1', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 1'))
+                .withFeature(exposes.enum('tuesday_hour_1', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10','11', '12', '13', '14', '15', '16', '17', '18', '19', 
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 1'))
+                .withFeature(exposes.enum('tuesday_minute_1', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 1'))
+                .withFeature(exposes.numeric('tuesday_temp_2', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 2'))
+                .withFeature(exposes.enum('tuesday_hour_2', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', 
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 2'))
+                .withFeature(exposes.enum('tuesday_minute_2', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute21'))
+                .withFeature(exposes.numeric('tuesday_temp_3', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 3'))
+                .withFeature(exposes.enum('tuesday_hour_3', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 3'))
+                .withFeature(exposes.enum('tuesday_minute_3', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 3'))
+                .withFeature(exposes.numeric('tuesday_temp_4', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 4'))
+                .withFeature(exposes.enum('tuesday_hour_4', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 4'))
+                .withFeature(exposes.enum('tuesday_minute_4', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 4'))
+                .withFeature(exposes.numeric('tuesday_temp_5', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 5'))
+                .withFeature(exposes.enum('tuesday_hour_5', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 5'))
+                .withFeature(exposes.enum('tuesday_minute_5', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 5'))
+                .withFeature(exposes.numeric('tuesday_temp_6', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 6'))
+                .withFeature(exposes.enum('tuesday_hour_6', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 6'))
+                .withFeature(exposes.enum('tuesday_minute_6', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 6'))
+                .withFeature(exposes.numeric('tuesday_temp_7', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 7'))
+                .withFeature(exposes.enum('tuesday_hour_7', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 7'))
+                .withFeature(exposes.enum('tuesday_minute_7', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 7'))
+                .withFeature(exposes.numeric('tuesday_temp_8', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 8'))
+                .withFeature(exposes.enum('tuesday_hour_8', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 8'))
+                .withFeature(exposes.enum('tuesday_minute_8', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 8'))
+                .withFeature(exposes.numeric('tuesday_temp_9', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 9')),
+            exposes.composite('wednesday', 'wednesday')
+                .withFeature(exposes.numeric('wednesday_temp_1', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 1'))
+                .withFeature(exposes.enum('wednesday_hour_1', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10','11', '12', '13', '14', '15', '16', '17', '18', '19', 
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 1'))
+                .withFeature(exposes.enum('wednesday_minute_1', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 1'))
+                .withFeature(exposes.numeric('wednesday_temp_2', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 2'))
+                .withFeature(exposes.enum('wednesday_hour_2', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', 
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 2'))
+                .withFeature(exposes.enum('wednesday_minute_2', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute21'))
+                .withFeature(exposes.numeric('wednesday_temp_3', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 3'))
+                .withFeature(exposes.enum('wednesday_hour_3', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 3'))
+                .withFeature(exposes.enum('wednesday_minute_3', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 3'))
+                .withFeature(exposes.numeric('wednesday_temp_4', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 4'))
+                .withFeature(exposes.enum('wednesday_hour_4', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 4'))
+                .withFeature(exposes.enum('wednesday_minute_4', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 4'))
+                .withFeature(exposes.numeric('wednesday_temp_5', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 5'))
+                .withFeature(exposes.enum('wednesday_hour_5', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 5'))
+                .withFeature(exposes.enum('wednesday_minute_5', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 5'))
+                .withFeature(exposes.numeric('wednesday_temp_6', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 6'))
+                .withFeature(exposes.enum('wednesday_hour_6', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 6'))
+                .withFeature(exposes.enum('wednesday_minute_6', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 6'))
+                .withFeature(exposes.numeric('wednesday_temp_7', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 7'))
+                .withFeature(exposes.enum('wednesday_hour_7', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 7'))
+                .withFeature(exposes.enum('wednesday_minute_7', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 7'))
+                .withFeature(exposes.numeric('wednesday_temp_8', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 8'))
+                .withFeature(exposes.enum('wednesday_hour_8', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 8'))
+                .withFeature(exposes.enum('wednesday_minute_8', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 8'))
+                .withFeature(exposes.numeric('wednesday_temp_9', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 9')),
+            exposes.composite('thursday', 'thursday')
+                .withFeature(exposes.numeric('thursday_temp_1', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 1'))
+                .withFeature(exposes.enum('thursday_hour_1', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10','11', '12', '13', '14', '15', '16', '17', '18', '19', 
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 1'))
+                .withFeature(exposes.enum('thursday_minute_1', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 1'))
+                .withFeature(exposes.numeric('thursday_temp_2', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 2'))
+                .withFeature(exposes.enum('thursday_hour_2', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', 
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 2'))
+                .withFeature(exposes.enum('thursday_minute_2', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute21'))
+                .withFeature(exposes.numeric('thursday_temp_3', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 3'))
+                .withFeature(exposes.enum('thursday_hour_3', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 3'))
+                .withFeature(exposes.enum('thursday_minute_3', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 3'))
+                .withFeature(exposes.numeric('thursday_temp_4', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 4'))
+                .withFeature(exposes.enum('thursday_hour_4', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 4'))
+                .withFeature(exposes.enum('thursday_minute_4', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 4'))
+                .withFeature(exposes.numeric('thursday_temp_5', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 5'))
+                .withFeature(exposes.enum('thursday_hour_5', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 5'))
+                .withFeature(exposes.enum('thursday_minute_5', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 5'))
+                .withFeature(exposes.numeric('thursday_temp_6', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 6'))
+                .withFeature(exposes.enum('thursday_hour_6', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 6'))
+                .withFeature(exposes.enum('thursday_minute_6', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 6'))
+                .withFeature(exposes.numeric('thursday_temp_7', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 7'))
+                .withFeature(exposes.enum('thursday_hour_7', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 7'))
+                .withFeature(exposes.enum('thursday_minute_7', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 7'))
+                .withFeature(exposes.numeric('thursday_temp_8', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 8'))
+                .withFeature(exposes.enum('thursday_hour_8', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 8'))
+                .withFeature(exposes.enum('thursday_minute_8', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 8'))
+                .withFeature(exposes.numeric('thursday_temp_9', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 9')),
+            exposes.composite('friday', 'friday')
+                .withFeature(exposes.numeric('friday_temp_1', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 1'))
+                .withFeature(exposes.enum('friday_hour_1', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10','11', '12', '13', '14', '15', '16', '17', '18', '19', 
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 1'))
+                .withFeature(exposes.enum('friday_minute_1', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 1'))
+                .withFeature(exposes.numeric('friday_temp_2', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 2'))
+                .withFeature(exposes.enum('friday_hour_2', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', 
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 2'))
+                .withFeature(exposes.enum('friday_minute_2', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute21'))
+                .withFeature(exposes.numeric('friday_temp_3', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 3'))
+                .withFeature(exposes.enum('friday_hour_3', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 3'))
+                .withFeature(exposes.enum('friday_minute_3', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 3'))
+                .withFeature(exposes.numeric('friday_temp_4', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 4'))
+                .withFeature(exposes.enum('friday_hour_4', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 4'))
+                .withFeature(exposes.enum('friday_minute_4', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 4'))
+                .withFeature(exposes.numeric('friday_temp_5', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 5'))
+                .withFeature(exposes.enum('friday_hour_5', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 5'))
+                .withFeature(exposes.enum('friday_minute_5', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 5'))
+                .withFeature(exposes.numeric('friday_temp_6', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 6'))
+                .withFeature(exposes.enum('friday_hour_6', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 6'))
+                .withFeature(exposes.enum('friday_minute_6', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 6'))
+                .withFeature(exposes.numeric('friday_temp_7', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 7'))
+                .withFeature(exposes.enum('friday_hour_7', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 7'))
+                .withFeature(exposes.enum('friday_minute_7', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 7'))
+                .withFeature(exposes.numeric('friday_temp_8', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 8'))
+                .withFeature(exposes.enum('friday_hour_8', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 8'))
+                .withFeature(exposes.enum('friday_minute_8', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 8'))
+                .withFeature(exposes.numeric('friday_temp_9', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 9')),
+            exposes.composite('saturday', 'saturday')
+                .withFeature(exposes.numeric('saturday_temp_1', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 1'))
+                .withFeature(exposes.enum('saturday_hour_1', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10','11', '12', '13', '14', '15', '16', '17', '18', '19', 
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 1'))
+                .withFeature(exposes.enum('saturday_minute_1', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 1'))
+                .withFeature(exposes.numeric('saturday_temp_2', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 2'))
+                .withFeature(exposes.enum('saturday_hour_2', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', 
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 2'))
+                .withFeature(exposes.enum('saturday_minute_2', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute21'))
+                .withFeature(exposes.numeric('saturday_temp_3', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 3'))
+                .withFeature(exposes.enum('saturday_hour_3', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 3'))
+                .withFeature(exposes.enum('saturday_minute_3', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 3'))
+                .withFeature(exposes.numeric('saturday_temp_4', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 4'))
+                .withFeature(exposes.enum('saturday_hour_4', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 4'))
+                .withFeature(exposes.enum('saturday_minute_4', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 4'))
+                .withFeature(exposes.numeric('saturday_temp_5', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 5'))
+                .withFeature(exposes.enum('saturday_hour_5', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 5'))
+                .withFeature(exposes.enum('saturday_minute_5', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 5'))
+                .withFeature(exposes.numeric('saturday_temp_6', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 6'))
+                .withFeature(exposes.enum('saturday_hour_6', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 6'))
+                .withFeature(exposes.enum('saturday_minute_6', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 6'))
+                .withFeature(exposes.numeric('saturday_temp_7', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 7'))
+                .withFeature(exposes.enum('saturday_hour_7', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 7'))
+                .withFeature(exposes.enum('saturday_minute_7', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 7'))
+                .withFeature(exposes.numeric('saturday_temp_8', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 8'))
+                .withFeature(exposes.enum('saturday_hour_8', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 8'))
+                .withFeature(exposes.enum('saturday_minute_8', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 8'))
+                .withFeature(exposes.numeric('saturday_temp_9', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 9')),
+            exposes.composite('sunday', 'sunday')
+                .withFeature(exposes.numeric('sunday_temp_1', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 1'))
+                .withFeature(exposes.enum('sunday_hour_1', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10','11', '12', '13', '14', '15', '16', '17', '18', '19', 
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 1'))
+                .withFeature(exposes.enum('sunday_minute_1', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 1'))
+                .withFeature(exposes.numeric('sunday_temp_2', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 2'))
+                .withFeature(exposes.enum('sunday_hour_2', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', 
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 2'))
+                .withFeature(exposes.enum('sunday_minute_2', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute21'))
+                .withFeature(exposes.numeric('sunday_temp_3', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 3'))
+                .withFeature(exposes.enum('sunday_hour_3', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 3'))
+                .withFeature(exposes.enum('sunday_minute_3', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 3'))
+                .withFeature(exposes.numeric('sunday_temp_4', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 4'))
+                .withFeature(exposes.enum('sunday_hour_4', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 4'))
+                .withFeature(exposes.enum('sunday_minute_4', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 4'))
+                .withFeature(exposes.numeric('sunday_temp_5', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 5'))
+                .withFeature(exposes.enum('sunday_hour_5', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 5'))
+                .withFeature(exposes.enum('sunday_minute_5', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 5'))
+                .withFeature(exposes.numeric('sunday_temp_6', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 6'))
+                .withFeature(exposes.enum('sunday_hour_6', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 6'))
+                .withFeature(exposes.enum('sunday_minute_6', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 6'))
+                .withFeature(exposes.numeric('sunday_temp_7', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 7'))
+                .withFeature(exposes.enum('sunday_hour_7', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 7'))
+                .withFeature(exposes.enum('sunday_minute_7', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 7'))
+                .withFeature(exposes.numeric('sunday_temp_8', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 8'))
+                .withFeature(exposes.enum('sunday_hour_8', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
+                                                            '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 8'))
+                .withFeature(exposes.enum('sunday_minute_8', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 8'))
+                .withFeature(exposes.numeric('sunday_temp_9', ea.ALL).withValueMin(0.5)
+                        .withValueMax(29.5)
+                        .withValueStep(0.5)
+                        .withUnit('°C')
+                        .withDescription('Temperature 9')),
             ],
 };
 
