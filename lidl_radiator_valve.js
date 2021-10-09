@@ -30,6 +30,7 @@ const tuyaLocal = {
     zsOpenwindowTime: 117,
     zsErrorStatus: 45,
     zsMode: 2,
+    zsAwaySetting: 103,
     zsBinaryOne: 106,
     zsBinaryTwo: 107,
 
@@ -43,9 +44,9 @@ const fzLocal = {
             const dp = msg.data.dp;
             const value = tuya.getDataValue(msg.data.datatype, msg.data.data);
 
+            // if (dp >= 101 && dp <=107) return; // handled by tuya_thermostat_weekly_schedule
+
             switch (dp) {
-            case tuya.dataPoints.state: // on/off
-                return !value ? {system_mode: 'off'} : {};
 
             case tuyaLocal.dataPoints.zsChildLock:
                 return {child_lock: value ? 'LOCK' : 'UNLOCK'};
@@ -112,8 +113,8 @@ const fzLocal = {
                 }
                 break;
 
-            case tuya.dataPoints.runningState:
-                return {running_state: value ? 'heat' : 'idle'};
+            //case tuya.dataPoints.runningState:
+            //    return {running_state: value ? 'heat' : 'idle'};
             case 109:
             case 110:
             case 111:
@@ -122,6 +123,16 @@ const fzLocal = {
             case 114:
             case 115:
                 break;
+            case tuyaLocal.dataPoints.zsAwaySetting:
+                const retap = {};
+                retap.away_preset_year = value[0];
+                retap.away_preset_month = value[1];
+                retap.away_preset_day = value[2];
+                retap.away_preset_hour = value[3];
+                retap.away_preset_minute = value[4];
+                retap.away_preset_temperature = (value[5] / 2).toFixed(1);
+                retap.away_preset_days = (value[6]<<8)+value[7];
+                return retap;
             default:
                 meta.logger.warn(`zigbee-herdsman-converters:zsThermostat: Unrecognized DP #${
                     dp} with data ${JSON.stringify(msg.data)}`);
@@ -169,6 +180,7 @@ const tzLocal = {
     zs_thermostat_comfort_temp: {
         key: ['comfort_temperature'],
         convertSet: async (entity, key, value, meta) => {
+            meta.logger.debug(JSON.stringify(entity));
             const temp = Math.round(value * 2);
             await tuya.sendDataPointValue(entity, tuyaLocal.dataPoints.zsComfortTemp, temp);
         },
@@ -237,6 +249,59 @@ const tzLocal = {
             await tuya.sendDataPointValue(entity, tuyaLocal.dataPoints.zsTempCalibration, value);
         },
     },
+    zs_thermostat_away_setting: {
+        key: ['away_setting'],
+        convertSet: async (entity, key, value, meta) => {
+            const result = [];
+            for (const attrName of ['away_preset_year', 
+                            'away_preset_month', 
+                            'away_preset_day',
+                            'away_preset_hour', 
+                            'away_preset_minute', 
+                            'away_preset_temperature',
+                            'away_preset_days']) {
+                var v = 0;
+                if (value.hasOwnProperty(attrName)) {
+                    v = value[attrName];
+                } else if (meta.state.hasOwnProperty(attrName)) {
+                    v = meta.state[attrName];
+                }
+                switch (attrName) {
+                    case 'away_preset_year':
+                        if (v<17 || v>99) v = 17;
+                        result.push(Math.round(v));
+                        break;
+                    case 'away_preset_month':
+                        if (v<1 || v>12) v = 1;
+                        result.push(Math.round(v));
+                        break;
+                    case 'away_preset_day':
+                        if (v<1 || v>31) v = 1;
+                        result.push(Math.round(v));
+                        break;
+                    case 'away_preset_hour':
+                        if (v<0 || v>23) v = 0;
+                        result.push(Math.round(v));
+                        break;
+                    case 'away_preset_minute':
+                        if (v<0 || v>59) v = 0;
+                        result.push(Math.round(v));
+                        break;
+                    case 'away_preset_temperature':
+                        if (v<0.5 || v>29.5) v = 17;
+                        result.push(Math.round(v * 2));
+                        break;
+                    case 'away_preset_days':
+                        if (v<1 || v>9999) v = 1;
+                        result.push((v & 0xff00)>>8);
+                        result.push((v & 0x00ff));
+                        break;
+                }
+            };
+            
+            await tuya.sendDataPointRaw(entity, tuyaLocal.dataPoints.zsAwaySetting, result);
+        },
+    },
 };       
 const device = {
     // Moes Tuya Alt Thermostat
@@ -265,6 +330,7 @@ const device = {
         tzLocal.zs_thermostat_openwindow_temp,
         tzLocal.zs_thermostat_binary_one,
         tzLocal.zs_thermostat_binary_two,
+        tzLocal.zs_thermostat_away_setting,
         //tz.tuya_thermostat_weekly_schedule,
         tz.tuya_data_point_test
     ],
@@ -299,6 +365,14 @@ const device = {
         e.battery_voltage(), //e.window_detection(), 
         exposes.binary('binary_one', ea.STATE, 'ON', 'OFF').withDescription('Unknown binary one'),
         exposes.binary('binary_two', ea.STATE, 'ON', 'OFF').withDescription('Unknown binary two'),
+        exposes.binary('away_mode', ea.STATE, 'ON', 'OFF').withDescription('Away mode'),
+        exposes.composite('away_setting', 'away_setting').withFeature(e.away_preset_days()).setAccess('away_preset_days', ea.ALL)
+                        .withFeature(e.away_preset_temperature()).setAccess('away_preset_temperature', ea.ALL)
+                        .withFeature(exposes.numeric('away_preset_year', ea.ALL).withUnit('year').withDescription('Start away year 20xx'))
+                        .withFeature(exposes.numeric('away_preset_month', ea.ALL).withUnit('month').withDescription('Start away month'))
+                        .withFeature(exposes.numeric('away_preset_day', ea.ALL).withUnit('day').withDescription('Start away day'))
+                        .withFeature(exposes.numeric('away_preset_hour', ea.ALL).withUnit('hour').withDescription('Start away hours'))
+                        .withFeature(exposes.numeric('away_preset_minute', ea.ALL).withUnit('min').withDescription('Start away minutes')),
             ],
 };
 
