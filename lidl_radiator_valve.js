@@ -276,7 +276,12 @@ const tzLocal = {
                         result.push(Math.round(v));
                         break;
                     case 'away_preset_day':
-                        if (v<1 || v>31) v = 1;
+                        const daysInMonth = new Date(2000+result[0], result[1],0).getDate();
+                        if (v<1)  {
+                            v = 1;
+                        } else if (v>daysInMonth) {
+                            v = daysInMonth;
+                        }
                         result.push(Math.round(v));
                         break;
                     case 'away_preset_hour':
