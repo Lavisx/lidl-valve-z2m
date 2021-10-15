@@ -444,8 +444,8 @@ const device = {
                         .withDescription('Temperature 1'))
                 .withFeature(exposes.enum('monday_hour_1', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10','11', '12', '13', '14', '15', '16', '17', '18', '19', 
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 1'))
-                .withFeature(exposes.enum('monday_minute_1', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 1'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp TO for temp 1'))
+                .withFeature(exposes.enum('monday_minute_1', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 1'))
                 .withFeature(exposes.numeric('monday_temp_2', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -453,8 +453,8 @@ const device = {
                         .withDescription('Temperature 2'))
                 .withFeature(exposes.enum('monday_hour_2', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', 
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 2'))
-                .withFeature(exposes.enum('monday_minute_2', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute21'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp TO for temp 2'))
+                .withFeature(exposes.enum('monday_minute_2', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 2'))
                 .withFeature(exposes.numeric('monday_temp_3', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -462,8 +462,8 @@ const device = {
                         .withDescription('Temperature 3'))
                 .withFeature(exposes.enum('monday_hour_3', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 3'))
-                .withFeature(exposes.enum('monday_minute_3', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 3'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp TO for temp 3'))
+                .withFeature(exposes.enum('monday_minute_3', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 3'))
                 .withFeature(exposes.numeric('monday_temp_4', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -471,8 +471,8 @@ const device = {
                         .withDescription('Temperature 4'))
                 .withFeature(exposes.enum('monday_hour_4', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 4'))
-                .withFeature(exposes.enum('monday_minute_4', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 4'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 4'))
+                .withFeature(exposes.enum('monday_minute_4', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 4'))
                 .withFeature(exposes.numeric('monday_temp_5', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -480,8 +480,8 @@ const device = {
                         .withDescription('Temperature 5'))
                 .withFeature(exposes.enum('monday_hour_5', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 5'))
-                .withFeature(exposes.enum('monday_minute_5', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 5'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 5'))
+                .withFeature(exposes.enum('monday_minute_5', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 5'))
                 .withFeature(exposes.numeric('monday_temp_6', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -489,8 +489,8 @@ const device = {
                         .withDescription('Temperature 6'))
                 .withFeature(exposes.enum('monday_hour_6', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 6'))
-                .withFeature(exposes.enum('monday_minute_6', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 6'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 6'))
+                .withFeature(exposes.enum('monday_minute_6', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 6'))
                 .withFeature(exposes.numeric('monday_temp_7', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -498,8 +498,8 @@ const device = {
                         .withDescription('Temperature 7'))
                 .withFeature(exposes.enum('monday_hour_7', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 7'))
-                .withFeature(exposes.enum('monday_minute_7', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 7'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 7'))
+                .withFeature(exposes.enum('monday_minute_7', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 7'))
                 .withFeature(exposes.numeric('monday_temp_8', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -507,8 +507,8 @@ const device = {
                         .withDescription('Temperature 8'))
                 .withFeature(exposes.enum('monday_hour_8', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 8'))
-                .withFeature(exposes.enum('monday_minute_8', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 8'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 8'))
+                .withFeature(exposes.enum('monday_minute_8', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 8'))
                 .withFeature(exposes.numeric('monday_temp_9', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -522,8 +522,8 @@ const device = {
                         .withDescription('Temperature 1'))
                 .withFeature(exposes.enum('tuesday_hour_1', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10','11', '12', '13', '14', '15', '16', '17', '18', '19', 
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 1'))
-                .withFeature(exposes.enum('tuesday_minute_1', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 1'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 1'))
+                .withFeature(exposes.enum('tuesday_minute_1', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 1'))
                 .withFeature(exposes.numeric('tuesday_temp_2', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -531,8 +531,8 @@ const device = {
                         .withDescription('Temperature 2'))
                 .withFeature(exposes.enum('tuesday_hour_2', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', 
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 2'))
-                .withFeature(exposes.enum('tuesday_minute_2', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute21'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 2'))
+                .withFeature(exposes.enum('tuesday_minute_2', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 2'))
                 .withFeature(exposes.numeric('tuesday_temp_3', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -540,8 +540,8 @@ const device = {
                         .withDescription('Temperature 3'))
                 .withFeature(exposes.enum('tuesday_hour_3', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 3'))
-                .withFeature(exposes.enum('tuesday_minute_3', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 3'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 3'))
+                .withFeature(exposes.enum('tuesday_minute_3', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 3'))
                 .withFeature(exposes.numeric('tuesday_temp_4', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -549,8 +549,8 @@ const device = {
                         .withDescription('Temperature 4'))
                 .withFeature(exposes.enum('tuesday_hour_4', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 4'))
-                .withFeature(exposes.enum('tuesday_minute_4', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 4'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 4'))
+                .withFeature(exposes.enum('tuesday_minute_4', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 4'))
                 .withFeature(exposes.numeric('tuesday_temp_5', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -558,8 +558,8 @@ const device = {
                         .withDescription('Temperature 5'))
                 .withFeature(exposes.enum('tuesday_hour_5', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 5'))
-                .withFeature(exposes.enum('tuesday_minute_5', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 5'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 5'))
+                .withFeature(exposes.enum('tuesday_minute_5', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 5'))
                 .withFeature(exposes.numeric('tuesday_temp_6', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -567,8 +567,8 @@ const device = {
                         .withDescription('Temperature 6'))
                 .withFeature(exposes.enum('tuesday_hour_6', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 6'))
-                .withFeature(exposes.enum('tuesday_minute_6', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 6'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 6'))
+                .withFeature(exposes.enum('tuesday_minute_6', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 6'))
                 .withFeature(exposes.numeric('tuesday_temp_7', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -576,8 +576,8 @@ const device = {
                         .withDescription('Temperature 7'))
                 .withFeature(exposes.enum('tuesday_hour_7', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 7'))
-                .withFeature(exposes.enum('tuesday_minute_7', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 7'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 7'))
+                .withFeature(exposes.enum('tuesday_minute_7', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 7'))
                 .withFeature(exposes.numeric('tuesday_temp_8', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -585,8 +585,8 @@ const device = {
                         .withDescription('Temperature 8'))
                 .withFeature(exposes.enum('tuesday_hour_8', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 8'))
-                .withFeature(exposes.enum('tuesday_minute_8', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 8'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 8'))
+                .withFeature(exposes.enum('tuesday_minute_8', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 8'))
                 .withFeature(exposes.numeric('tuesday_temp_9', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -600,8 +600,8 @@ const device = {
                         .withDescription('Temperature 1'))
                 .withFeature(exposes.enum('wednesday_hour_1', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10','11', '12', '13', '14', '15', '16', '17', '18', '19', 
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 1'))
-                .withFeature(exposes.enum('wednesday_minute_1', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 1'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 1'))
+                .withFeature(exposes.enum('wednesday_minute_1', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 1'))
                 .withFeature(exposes.numeric('wednesday_temp_2', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -609,8 +609,8 @@ const device = {
                         .withDescription('Temperature 2'))
                 .withFeature(exposes.enum('wednesday_hour_2', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', 
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 2'))
-                .withFeature(exposes.enum('wednesday_minute_2', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute21'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 2'))
+                .withFeature(exposes.enum('wednesday_minute_2', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 2'))
                 .withFeature(exposes.numeric('wednesday_temp_3', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -618,8 +618,8 @@ const device = {
                         .withDescription('Temperature 3'))
                 .withFeature(exposes.enum('wednesday_hour_3', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 3'))
-                .withFeature(exposes.enum('wednesday_minute_3', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 3'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 3'))
+                .withFeature(exposes.enum('wednesday_minute_3', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 3'))
                 .withFeature(exposes.numeric('wednesday_temp_4', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -627,8 +627,8 @@ const device = {
                         .withDescription('Temperature 4'))
                 .withFeature(exposes.enum('wednesday_hour_4', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 4'))
-                .withFeature(exposes.enum('wednesday_minute_4', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 4'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 4'))
+                .withFeature(exposes.enum('wednesday_minute_4', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 4'))
                 .withFeature(exposes.numeric('wednesday_temp_5', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -636,8 +636,8 @@ const device = {
                         .withDescription('Temperature 5'))
                 .withFeature(exposes.enum('wednesday_hour_5', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 5'))
-                .withFeature(exposes.enum('wednesday_minute_5', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 5'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 5'))
+                .withFeature(exposes.enum('wednesday_minute_5', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 5'))
                 .withFeature(exposes.numeric('wednesday_temp_6', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -645,8 +645,8 @@ const device = {
                         .withDescription('Temperature 6'))
                 .withFeature(exposes.enum('wednesday_hour_6', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 6'))
-                .withFeature(exposes.enum('wednesday_minute_6', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 6'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 6'))
+                .withFeature(exposes.enum('wednesday_minute_6', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 6'))
                 .withFeature(exposes.numeric('wednesday_temp_7', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -654,8 +654,8 @@ const device = {
                         .withDescription('Temperature 7'))
                 .withFeature(exposes.enum('wednesday_hour_7', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 7'))
-                .withFeature(exposes.enum('wednesday_minute_7', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 7'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 7'))
+                .withFeature(exposes.enum('wednesday_minute_7', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 7'))
                 .withFeature(exposes.numeric('wednesday_temp_8', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -663,8 +663,8 @@ const device = {
                         .withDescription('Temperature 8'))
                 .withFeature(exposes.enum('wednesday_hour_8', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 8'))
-                .withFeature(exposes.enum('wednesday_minute_8', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 8'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 8'))
+                .withFeature(exposes.enum('wednesday_minute_8', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 8'))
                 .withFeature(exposes.numeric('wednesday_temp_9', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -678,8 +678,8 @@ const device = {
                         .withDescription('Temperature 1'))
                 .withFeature(exposes.enum('thursday_hour_1', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10','11', '12', '13', '14', '15', '16', '17', '18', '19', 
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 1'))
-                .withFeature(exposes.enum('thursday_minute_1', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 1'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 1'))
+                .withFeature(exposes.enum('thursday_minute_1', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 1'))
                 .withFeature(exposes.numeric('thursday_temp_2', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -687,8 +687,8 @@ const device = {
                         .withDescription('Temperature 2'))
                 .withFeature(exposes.enum('thursday_hour_2', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', 
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 2'))
-                .withFeature(exposes.enum('thursday_minute_2', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute21'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 2'))
+                .withFeature(exposes.enum('thursday_minute_2', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 2'))
                 .withFeature(exposes.numeric('thursday_temp_3', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -696,8 +696,8 @@ const device = {
                         .withDescription('Temperature 3'))
                 .withFeature(exposes.enum('thursday_hour_3', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 3'))
-                .withFeature(exposes.enum('thursday_minute_3', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 3'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 3'))
+                .withFeature(exposes.enum('thursday_minute_3', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 3'))
                 .withFeature(exposes.numeric('thursday_temp_4', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -705,8 +705,8 @@ const device = {
                         .withDescription('Temperature 4'))
                 .withFeature(exposes.enum('thursday_hour_4', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 4'))
-                .withFeature(exposes.enum('thursday_minute_4', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 4'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 4'))
+                .withFeature(exposes.enum('thursday_minute_4', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 4'))
                 .withFeature(exposes.numeric('thursday_temp_5', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -714,8 +714,8 @@ const device = {
                         .withDescription('Temperature 5'))
                 .withFeature(exposes.enum('thursday_hour_5', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 5'))
-                .withFeature(exposes.enum('thursday_minute_5', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 5'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 5'))
+                .withFeature(exposes.enum('thursday_minute_5', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 5'))
                 .withFeature(exposes.numeric('thursday_temp_6', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -723,8 +723,8 @@ const device = {
                         .withDescription('Temperature 6'))
                 .withFeature(exposes.enum('thursday_hour_6', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 6'))
-                .withFeature(exposes.enum('thursday_minute_6', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 6'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 6'))
+                .withFeature(exposes.enum('thursday_minute_6', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 6'))
                 .withFeature(exposes.numeric('thursday_temp_7', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -732,8 +732,8 @@ const device = {
                         .withDescription('Temperature 7'))
                 .withFeature(exposes.enum('thursday_hour_7', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 7'))
-                .withFeature(exposes.enum('thursday_minute_7', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 7'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 7'))
+                .withFeature(exposes.enum('thursday_minute_7', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 7'))
                 .withFeature(exposes.numeric('thursday_temp_8', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -741,8 +741,8 @@ const device = {
                         .withDescription('Temperature 8'))
                 .withFeature(exposes.enum('thursday_hour_8', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 8'))
-                .withFeature(exposes.enum('thursday_minute_8', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 8'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 8'))
+                .withFeature(exposes.enum('thursday_minute_8', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 8'))
                 .withFeature(exposes.numeric('thursday_temp_9', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -756,8 +756,8 @@ const device = {
                         .withDescription('Temperature 1'))
                 .withFeature(exposes.enum('friday_hour_1', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10','11', '12', '13', '14', '15', '16', '17', '18', '19', 
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 1'))
-                .withFeature(exposes.enum('friday_minute_1', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 1'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 1'))
+                .withFeature(exposes.enum('friday_minute_1', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 1'))
                 .withFeature(exposes.numeric('friday_temp_2', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -765,8 +765,8 @@ const device = {
                         .withDescription('Temperature 2'))
                 .withFeature(exposes.enum('friday_hour_2', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', 
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 2'))
-                .withFeature(exposes.enum('friday_minute_2', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute21'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 2'))
+                .withFeature(exposes.enum('friday_minute_2', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 2'))
                 .withFeature(exposes.numeric('friday_temp_3', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -774,8 +774,8 @@ const device = {
                         .withDescription('Temperature 3'))
                 .withFeature(exposes.enum('friday_hour_3', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 3'))
-                .withFeature(exposes.enum('friday_minute_3', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 3'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 3'))
+                .withFeature(exposes.enum('friday_minute_3', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 3'))
                 .withFeature(exposes.numeric('friday_temp_4', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -783,8 +783,8 @@ const device = {
                         .withDescription('Temperature 4'))
                 .withFeature(exposes.enum('friday_hour_4', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 4'))
-                .withFeature(exposes.enum('friday_minute_4', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 4'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 4'))
+                .withFeature(exposes.enum('friday_minute_4', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 4'))
                 .withFeature(exposes.numeric('friday_temp_5', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -792,8 +792,8 @@ const device = {
                         .withDescription('Temperature 5'))
                 .withFeature(exposes.enum('friday_hour_5', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 5'))
-                .withFeature(exposes.enum('friday_minute_5', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 5'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 5'))
+                .withFeature(exposes.enum('friday_minute_5', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 5'))
                 .withFeature(exposes.numeric('friday_temp_6', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -801,8 +801,8 @@ const device = {
                         .withDescription('Temperature 6'))
                 .withFeature(exposes.enum('friday_hour_6', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 6'))
-                .withFeature(exposes.enum('friday_minute_6', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 6'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 6'))
+                .withFeature(exposes.enum('friday_minute_6', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 6'))
                 .withFeature(exposes.numeric('friday_temp_7', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -810,8 +810,8 @@ const device = {
                         .withDescription('Temperature 7'))
                 .withFeature(exposes.enum('friday_hour_7', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 7'))
-                .withFeature(exposes.enum('friday_minute_7', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 7'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 7'))
+                .withFeature(exposes.enum('friday_minute_7', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 7'))
                 .withFeature(exposes.numeric('friday_temp_8', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -819,8 +819,8 @@ const device = {
                         .withDescription('Temperature 8'))
                 .withFeature(exposes.enum('friday_hour_8', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 8'))
-                .withFeature(exposes.enum('friday_minute_8', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 8'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 8'))
+                .withFeature(exposes.enum('friday_minute_8', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 8'))
                 .withFeature(exposes.numeric('friday_temp_9', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -834,8 +834,8 @@ const device = {
                         .withDescription('Temperature 1'))
                 .withFeature(exposes.enum('saturday_hour_1', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10','11', '12', '13', '14', '15', '16', '17', '18', '19', 
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 1'))
-                .withFeature(exposes.enum('saturday_minute_1', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 1'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 1'))
+                .withFeature(exposes.enum('saturday_minute_1', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 1'))
                 .withFeature(exposes.numeric('saturday_temp_2', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -843,8 +843,8 @@ const device = {
                         .withDescription('Temperature 2'))
                 .withFeature(exposes.enum('saturday_hour_2', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', 
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 2'))
-                .withFeature(exposes.enum('saturday_minute_2', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute21'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 2'))
+                .withFeature(exposes.enum('saturday_minute_2', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 2'))
                 .withFeature(exposes.numeric('saturday_temp_3', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -852,8 +852,8 @@ const device = {
                         .withDescription('Temperature 3'))
                 .withFeature(exposes.enum('saturday_hour_3', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 3'))
-                .withFeature(exposes.enum('saturday_minute_3', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 3'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 3'))
+                .withFeature(exposes.enum('saturday_minute_3', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 3'))
                 .withFeature(exposes.numeric('saturday_temp_4', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -861,8 +861,8 @@ const device = {
                         .withDescription('Temperature 4'))
                 .withFeature(exposes.enum('saturday_hour_4', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 4'))
-                .withFeature(exposes.enum('saturday_minute_4', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 4'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 4'))
+                .withFeature(exposes.enum('saturday_minute_4', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 4'))
                 .withFeature(exposes.numeric('saturday_temp_5', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -870,8 +870,8 @@ const device = {
                         .withDescription('Temperature 5'))
                 .withFeature(exposes.enum('saturday_hour_5', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 5'))
-                .withFeature(exposes.enum('saturday_minute_5', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 5'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 5'))
+                .withFeature(exposes.enum('saturday_minute_5', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 5'))
                 .withFeature(exposes.numeric('saturday_temp_6', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -879,8 +879,8 @@ const device = {
                         .withDescription('Temperature 6'))
                 .withFeature(exposes.enum('saturday_hour_6', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 6'))
-                .withFeature(exposes.enum('saturday_minute_6', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 6'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 6'))
+                .withFeature(exposes.enum('saturday_minute_6', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 6'))
                 .withFeature(exposes.numeric('saturday_temp_7', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -888,8 +888,8 @@ const device = {
                         .withDescription('Temperature 7'))
                 .withFeature(exposes.enum('saturday_hour_7', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 7'))
-                .withFeature(exposes.enum('saturday_minute_7', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 7'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 7'))
+                .withFeature(exposes.enum('saturday_minute_7', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 7'))
                 .withFeature(exposes.numeric('saturday_temp_8', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -897,8 +897,8 @@ const device = {
                         .withDescription('Temperature 8'))
                 .withFeature(exposes.enum('saturday_hour_8', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 8'))
-                .withFeature(exposes.enum('saturday_minute_8', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 8'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 8'))
+                .withFeature(exposes.enum('saturday_minute_8', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 8'))
                 .withFeature(exposes.numeric('saturday_temp_9', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -912,8 +912,8 @@ const device = {
                         .withDescription('Temperature 1'))
                 .withFeature(exposes.enum('sunday_hour_1', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10','11', '12', '13', '14', '15', '16', '17', '18', '19', 
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 1'))
-                .withFeature(exposes.enum('sunday_minute_1', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 1'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 1'))
+                .withFeature(exposes.enum('sunday_minute_1', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 1'))
                 .withFeature(exposes.numeric('sunday_temp_2', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -921,8 +921,8 @@ const device = {
                         .withDescription('Temperature 2'))
                 .withFeature(exposes.enum('sunday_hour_2', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', 
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 2'))
-                .withFeature(exposes.enum('sunday_minute_2', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute21'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 2'))
+                .withFeature(exposes.enum('sunday_minute_2', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 2'))
                 .withFeature(exposes.numeric('sunday_temp_3', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -930,8 +930,8 @@ const device = {
                         .withDescription('Temperature 3'))
                 .withFeature(exposes.enum('sunday_hour_3', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 3'))
-                .withFeature(exposes.enum('sunday_minute_3', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 3'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 3'))
+                .withFeature(exposes.enum('sunday_minute_3', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 3'))
                 .withFeature(exposes.numeric('sunday_temp_4', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -939,8 +939,8 @@ const device = {
                         .withDescription('Temperature 4'))
                 .withFeature(exposes.enum('sunday_hour_4', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 4'))
-                .withFeature(exposes.enum('sunday_minute_4', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 4'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 4'))
+                .withFeature(exposes.enum('sunday_minute_4', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 4'))
                 .withFeature(exposes.numeric('sunday_temp_5', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -948,8 +948,8 @@ const device = {
                         .withDescription('Temperature 5'))
                 .withFeature(exposes.enum('sunday_hour_5', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 5'))
-                .withFeature(exposes.enum('sunday_minute_5', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 5'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 5'))
+                .withFeature(exposes.enum('sunday_minute_5', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 5'))
                 .withFeature(exposes.numeric('sunday_temp_6', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -957,8 +957,8 @@ const device = {
                         .withDescription('Temperature 6'))
                 .withFeature(exposes.enum('sunday_hour_6', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 6'))
-                .withFeature(exposes.enum('sunday_minute_6', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 6'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 6'))
+                .withFeature(exposes.enum('sunday_minute_6', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 6'))
                 .withFeature(exposes.numeric('sunday_temp_7', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -966,8 +966,8 @@ const device = {
                         .withDescription('Temperature 7'))
                 .withFeature(exposes.enum('sunday_hour_7', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 7'))
-                .withFeature(exposes.enum('sunday_minute_7', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 7'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 7'))
+                .withFeature(exposes.enum('sunday_minute_7', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 7'))
                 .withFeature(exposes.numeric('sunday_temp_8', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
@@ -975,8 +975,8 @@ const device = {
                         .withDescription('Temperature 8'))
                 .withFeature(exposes.enum('sunday_hour_8', ea.STATE_SET, ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
                                                             '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour 8'))
-                .withFeature(exposes.enum('sunday_minute_8', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute 8'))
+                                                            '20', '21', '22', '23', '24' ]).withDescription('Hour TO for temp 8'))
+                .withFeature(exposes.enum('sunday_minute_8', ea.STATE_SET, ['00', '15', '30', '45']).withDescription('Minute TO for temp 8'))
                 .withFeature(exposes.numeric('sunday_temp_9', ea.ALL).withValueMin(0.5)
                         .withValueMax(29.5)
                         .withValueStep(0.5)
